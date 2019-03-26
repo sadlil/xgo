@@ -5,13 +5,11 @@ import (
 	"fmt"
 )
 
-type (
-	keyLogTag struct{}
-)
-
-var (
-	contextKeyLogTag = keyLogTag{}
-)
+type logTagContext struct{
+	logTag string
+	uuid string
+	context.Context
+}
 
 // WithLogTag returns a copy of ctx and appends [key:value] in the log tag. If uuid is
 // available beforehand in ctx, it will be used as the prefix of the log tag.
