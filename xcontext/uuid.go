@@ -22,6 +22,7 @@ var (
 // contextKeyUUID, ignores resetting the value otherwise.
 // UUID is a efficient way to track a context by the id through out its lifespan.
 // For a request scoped context it is much easier to track the request scope with this.
+// WIthUUID is expected to be called before WithLogTag.
 func WithUUID(ctx context.Context, uuid string) context.Context {
 	if len(uuid) == 0 {
 		uuid = nextUUID()
