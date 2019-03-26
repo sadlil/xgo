@@ -10,11 +10,11 @@ LINTER_PKGS = $(shell glide nv)
 LINTER_EXCLUDE = "(^|/)z_.*\.go|(^|/)mocks/|(^|/)mock_.*\.go|(^|/)(_)?resources/|(^|/)vendor/|(^|/)databases/|(^|/)pb/"
 
 fmt:
-	@goimports -w pkg
-	@gofmt -s -w  pkg
+	@goimports -w .
+	@gofmt -s -w  .
 
 compile: fmt test
-	@go install ./pkg/...
+	@go install ./...
 
 # A user can invoke tests in different ways:
 #  - make test runs all tests;

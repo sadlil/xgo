@@ -9,8 +9,8 @@ $ go get github.com/sadlil/xgo/...
 ## Usages
 
 ## Packages
- - [xcontext](docs/xcontext.md)
- - [xsync](docs/xcontext.md)
+ - [xcontext](xcontext/doc.md), [Godoc Link](https://godoc.org/github.com/sadlil/xgo/xcontext)
+ - [xsync](xcontext/doc.md), [Godoc Link](https://godoc.org/github.com/sadlil/xgo/xsync)
  
 ## Contributing
 
