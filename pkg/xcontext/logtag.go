@@ -5,46 +5,54 @@ import (
 	"fmt"
 )
 
-type logTagContext struct{
-	logTag string
-	uuid string
+type logTagContext struct {
 	context.Context
+	logTag string
+	uuid   string
 }
 
 // WithLogTag returns a copy of ctx and appends [key:value] in the log tag. If uuid is
-// available beforehand in ctx, it will be used as the prefix of the log tag.
-// WIthUUID is expected to be called before WithLogTag if UUID is expected in Log Tag.
+// available in ctx, it will be used as the prefix of the log tag.
 // The soul purpose of this log tag is to carry around identifiers that can be used
 // for logging and debugging in systems.
 func WithLogTag(ctx context.Context, key, value string) context.Context {
-	v := ctx.Value(contextKeyLogTag)
-	if v == nil {
-		uuid, _ := UUID(ctx)
-		v = ""
-		if len(uuid) > 0 {
-			// if uuid is available set the uuid as the first element
-			v = fmt.Sprintf("[uuid:%s]", uuid)
+	taggedCtx, ok := ctx.(*logTagContext)
+	if !ok {
+		taggedCtx = &logTagContext{
+			Context: ctx,
 		}
 	}
 
-	logTag := v.(string)
-	logTag = fmt.Sprintf("%s[%s:%s]", logTag, key, value)
-	return context.WithValue(ctx, contextKeyLogTag, logTag)
+	taggedCtx.logTag = fmt.Sprintf("%s[%s:%s]", taggedCtx.logTag, key, value)
+	return taggedCtx
 }
+
+const (
+	emptyString = ""
+	uuidTag     = "uuid"
+)
 
 // LogTag returns the string representations of log tags to be used for logging.
 func LogTag(ctx context.Context) string {
-	v := ctx.Value(contextKeyLogTag)
-	if v == nil {
+	taggedCtx, ok := ctx.(*logTagContext)
+	if !ok {
+		// if WithLogTag is not called before but uuid is set only
+		// we return uuid as log tag
 		uuid, _ := UUID(ctx)
-		v = ""
 		if len(uuid) > 0 {
-			// if uuid is available set the uuid as the first element
-			return fmt.Sprintf("[uuid:%s]", uuid)
+			return fmt.Sprintf("[%s:%s]", uuidTag, uuid)
 		}
-		return ""
+		return emptyString
 	}
 
-	logTag := v.(string)
+	if taggedCtx.uuid == emptyString {
+		// uuid was not set by any earlier LogTag call
+		taggedCtx.uuid, _ = UUID(ctx)
+	}
+
+	var logTag = taggedCtx.logTag
+	if taggedCtx.uuid != emptyString {
+		logTag = fmt.Sprintf("[%s:%s]%s", uuidTag, taggedCtx.uuid, logTag)
+	}
 	return logTag
 }
