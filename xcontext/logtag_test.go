@@ -70,6 +70,18 @@ func TestLogTag(t *testing.T) {
 			},
 			ExpectedTag: "[uuid:uuid]",
 		},
+		{
+			Name: "WithValue called after WithLogTag",
+			Setup: func() context.Context {
+				ctx := context.Background()
+				ctx = WithUUID(ctx, "uuid")
+				ctx = WithLogTag(ctx, "key", "value")
+				ctx = context.WithValue(ctx, "new-key", "new-value")
+				ctx = context.WithValue(ctx, "new-key", "new-value")
+				return ctx
+			},
+			ExpectedTag: "[uuid:uuid][key:value]",
+		},
 	}
 
 	for _, test := range tests {
