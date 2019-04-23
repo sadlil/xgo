@@ -7,7 +7,7 @@ REPO_ROOT = ${GOPATH}/src/github.com/sadlil
 ROOT = ${REPO_ROOT}/${PROJECT}
 
 LINTER_PKGS = $(shell glide nv)
-LINTER_EXCLUDE = "(^|/)z_.*\.go|(^|/)mocks/|(^|/)mock_.*\.go|(^|/)(_)?resources/|(^|/)vendor/|(^|/)databases/|(^|/)pb/"
+LINTER_EXCLUDE = "(^|/)z_.*\.go|(^|/)mocks/|(^|/)mock_.*\.go|(^|/)(_)?resources/|(^|/)vendor/"
 
 fmt:
 	@goimports -w .
