@@ -5,7 +5,7 @@ import (
 	"sync/atomic"
 )
 
-// MustOnce is an object that will perform exactly one action until the action succeed.
+// MustOnce is an object that will perform exactly one action until the action is succeed.
 // All failed run for the action will have the opportunity to run the action again.
 type MustOnce struct {
 	m    sync.Mutex
