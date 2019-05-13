@@ -2,6 +2,7 @@ package xcontext
 
 import (
 	"context"
+	"sync"
 	"testing"
 )
 
@@ -78,6 +79,28 @@ func TestLogTag(t *testing.T) {
 				ctx = WithLogTag(ctx, "key", "value")
 				ctx = context.WithValue(ctx, "new-key", "new-value")
 				ctx = context.WithValue(ctx, "new-key", "new-value")
+				return ctx
+			},
+			ExpectedTag: "[uuid:uuid][key:value]",
+		},
+		{
+			Name: "Child have no effect to parent",
+			Setup: func() context.Context {
+				ctx := context.Background()
+				ctx = WithUUID(ctx, "uuid")
+				ctx = WithLogTag(ctx, "key", "value")
+				ctx = context.WithValue(ctx, "new-key", "new-value")
+
+				var wg sync.WaitGroup
+				go func(c context.Context) {
+					wg.Add(1)
+					defer wg.Done()
+
+					c = WithLogTag(c, "child", "routine")
+
+				}(ctx)
+				wg.Wait()
+
 				return ctx
 			},
 			ExpectedTag: "[uuid:uuid][key:value]",

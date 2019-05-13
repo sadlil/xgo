@@ -3,11 +3,6 @@
 
 # Variables
 PROJECT = xgo
-REPO_ROOT = ${GOPATH}/src/github.com/sadlil
-ROOT = ${REPO_ROOT}/${PROJECT}
-
-LINTER_PKGS = $(shell glide nv)
-LINTER_EXCLUDE = "(^|/)z_.*\.go|(^|/)mocks/|(^|/)mock_.*\.go|(^|/)(_)?resources/|(^|/)vendor/"
 
 fmt:
 	@goimports -w .
@@ -19,7 +14,7 @@ compile: fmt test
 # A user can invoke tests in different ways:
 #  - make test runs all tests;
 #  - make test TEST_TIMEOUT=10 runs all tests with a timeout of 10 seconds;
-#  - make test TEST_PKG=./model/... only runs tests for the model package;
+#  - make test TEST_PKG=./xsync/... only runs tests for the xsync package;
 #  - make test TEST_ARGS="-v -short" runs tests with the specified arguments;
 #  - make test-race runs tests with race detector enabled.
 TEST_TIMEOUT = 60
